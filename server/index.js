@@ -27,6 +27,18 @@ io.on("connect", (socket) => {
     const { error, user } = addUser({ id: socket.id, name, room });
 
     if (error) return callback(error);
+    //message to new user
+    socket.emit("message", {
+      user: "admin",
+      text: `${user.name}, welcome to the room ${user.room}`,
+    });
+    //broadcast to all other users user has joined
+    socket.broadcast
+      .to(user.room)
+      .emit("message", { user: "admin", text: `${user.name}, has joined!` });
+
+    socket.join(user.room);
+    callback();
   });
 
   socket.on("disconnect", () => {
