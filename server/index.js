@@ -2,6 +2,7 @@ const http = require("http");
 const express = require("express");
 const PORT = process.env.PORT || 5000;
 const cors = require("cors");
+const { addUser, removeUser, getUser, getUsersInRoom } = require("./users.js");
 
 const router = require("./router");
 
@@ -22,7 +23,10 @@ io.on("connect", (socket) => {
   console.log("new connection!!");
 
   socket.on("join", ({ name, room }, callback) => {
-    console.log(name, room);
+    //console.log(name, room);
+    const { error, user } = addUser({ id: socket.id, name, room });
+
+    if (error) return callback(error);
   });
 
   socket.on("disconnect", () => {
