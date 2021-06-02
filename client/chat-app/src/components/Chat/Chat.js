@@ -18,12 +18,15 @@ const Chat = ({ location }) => {
     const { name, room } = queryString.parse(location.search);
     console.log("data-> ", name, room);
 
-    socket = io("localhost:5000");
+    socket = io(ENDPOINT);
 
     setName(name);
     setRoom(room);
 
-    console.log("socket->", socket);
+    // console.log("socket->", socket);
+    socket.emit("join", { name: name, room: room }, ({ error }) => {
+      alert(error);
+    });
   }, [ENDPOINT, location.search]);
   return <h1>Chat</h1>;
 };
